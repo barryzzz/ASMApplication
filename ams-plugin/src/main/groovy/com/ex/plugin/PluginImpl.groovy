@@ -1,20 +1,18 @@
 package com.ex.plugin
 
-import com.android.build.api.transform.Context
-import com.android.build.api.transform.DirectoryInput
-import com.android.build.api.transform.Format
-import com.android.build.api.transform.JarInput
-import com.android.build.api.transform.QualifiedContent
-import com.android.build.api.transform.Transform
-import com.android.build.api.transform.TransformException
-import com.android.build.api.transform.TransformInput
-import com.android.build.api.transform.TransformOutputProvider
+import com.android.build.api.transform.*
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.internal.pipeline.TransformManager
+import com.example.ams_plugin.ToastVisitor
 import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.objectweb.asm.ClassReader
+import org.objectweb.asm.ClassVisitor
+import org.objectweb.asm.ClassWriter
+
+import java.lang.reflect.Field
 
 public class PluginImpl extends Transform implements Plugin<Project> {
 
@@ -56,6 +54,28 @@ public class PluginImpl extends Transform implements Plugin<Project> {
             input.directoryInputs.each { DirectoryInput directoryInput ->
 
                 //代码插桩
+                if (directoryInput.file.isDirectory()) {
+
+                    directoryInput.file.eachFileRecurse { File file ->
+                        def name = file.name
+                        println name
+                        if (name.equals("MainActivity.class")) {
+                            ClassReader classReader = new ClassReader(file.bytes)
+                            ClassWriter classWriter = new ClassWriter(classReader, ClassWriter.COMPUTE_MAXS)
+
+                            ClassVisitor cv = new ToastVisitor(classWriter)
+
+                            classReader.accept(cv, ClassReader.EXPAND_FRAMES)
+                            byte[] bytes = classWriter.toByteArray()
+                            FileOutputStream fos = new FileOutputStream(file.parentFile.absolutePath + File.separator + name)
+                            fos.write(bytes)
+                            fos.close()
+                        }
+                    }
+                }
+
+
+
                 def dest = outputProvider.getContentLocation(directoryInput.name,
                         directoryInput.contentTypes, directoryInput.scopes, Format.DIRECTORY)
                 FileUtils.copyDirectory(directoryInput.file, dest)

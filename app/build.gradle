@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-//apply plugin: 'testp'
+apply plugin: 'testp'
 
 android {
     compileSdkVersion 27
