@@ -12,8 +12,6 @@ import org.objectweb.asm.ClassReader
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.ClassWriter
 
-import java.lang.reflect.Field
-
 public class PluginImpl extends Transform implements Plugin<Project> {
 
 
