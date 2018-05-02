@@ -3,7 +3,7 @@ package com.ex.plugin
 import com.android.build.api.transform.*
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.internal.pipeline.TransformManager
-import com.example.ams_plugin.ToastVisitor
+import com.example.ams_plugin.View$ClickVisitor
 import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Plugin
@@ -61,7 +61,8 @@ public class PluginImpl extends Transform implements Plugin<Project> {
                             ClassReader classReader = new ClassReader(file.bytes)
                             ClassWriter classWriter = new ClassWriter(classReader, ClassWriter.COMPUTE_MAXS)
 
-                            ClassVisitor cv = new ToastVisitor(classWriter)
+//                            ClassVisitor cv = new ToastVisitor(classWriter)
+                            ClassVisitor cv=new View$ClickVisitor(classWriter);
 
                             classReader.accept(cv, ClassReader.EXPAND_FRAMES)
                             byte[] bytes = classWriter.toByteArray()
