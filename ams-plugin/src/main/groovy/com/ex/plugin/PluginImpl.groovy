@@ -3,7 +3,7 @@ package com.ex.plugin
 import com.android.build.api.transform.*
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.internal.pipeline.TransformManager
-import com.example.ams_plugin.View$ClickVisitor
+import com.example.ams_plugin.CustomVisitor
 import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Plugin
@@ -56,13 +56,13 @@ public class PluginImpl extends Transform implements Plugin<Project> {
 
                     directoryInput.file.eachFileRecurse { File file ->
                         def name = file.name
-                        println name
-                        if (name.equals("MainActivity.class")) {
+//                        println name
+                        if (name.endsWith(".class") && !name.startsWith("R\$") &&
+                                !"R.class".equals(name) && !"BuildConfig.class".equals(name)) {
                             ClassReader classReader = new ClassReader(file.bytes)
                             ClassWriter classWriter = new ClassWriter(classReader, ClassWriter.COMPUTE_MAXS)
 
-//                            ClassVisitor cv = new ToastVisitor(classWriter)
-                            ClassVisitor cv=new View$ClickVisitor(classWriter);
+                            ClassVisitor cv = new CustomVisitor(classWriter)
 
                             classReader.accept(cv, ClassReader.EXPAND_FRAMES)
                             byte[] bytes = classWriter.toByteArray()
@@ -86,6 +86,7 @@ public class PluginImpl extends Transform implements Plugin<Project> {
                 if (jarName.endsWith(".jar")) {
                     jarName = jarName.substring(0, jarName.length() - 4)
                 }
+//                println "jarName:"+jarName
                 //代码插桩
                 def dest = outputProvider.getContentLocation(jarName + md5Name,
                         jarInput.contentTypes, jarInput.scopes, Format.JAR)
