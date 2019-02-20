@@ -3,7 +3,6 @@ package com.example.lishoulin.amsapplication;
 import android.util.Log;
 import android.view.View;
 
-import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,17 +10,30 @@ public class DebouncedClick {
 
     private static final String TAG = "DebouncedClick";
 
-    private static long WAIT_TIME = 300L;
+    private static final long WAIT_TIME = 300L;
 
 
-    private static final Map<Integer, DebouncedView> viewWaitTimeMap = new HashMap<>();
+    private Map<Integer, DebouncedView> viewWaitTimeMap = new HashMap<>();
 
 
-    public static boolean isCanClick(View tagview) {
+    private DebouncedClick() {
+
+    }
+
+    private static class Builder {
+        private static DebouncedClick sDebouncedClick = new DebouncedClick();
+    }
+
+    public static DebouncedClick getInstance() {
+        return Builder.sDebouncedClick;
+    }
+
+
+    public boolean isCanClick(View tagview) {
         DebouncedView debouncedView = viewWaitTimeMap.get(tagview.getId());
         if (debouncedView == null) {
             long starttime = System.currentTimeMillis();
-            debouncedView = new DebouncedView(tagview);
+            debouncedView = new DebouncedView();
             debouncedView.setTime(starttime);
             viewWaitTimeMap.put(tagview.getId(), debouncedView);
             Log.e(TAG, "点击通行1");
@@ -38,13 +50,10 @@ public class DebouncedClick {
     }
 
 
-    private static class DebouncedView extends WeakReference<View> {
+    private class DebouncedView {
 
         private long starttime;
 
-        public DebouncedView(View referent) {
-            super(referent);
-        }
 
         public long getTime() {
             return starttime;
