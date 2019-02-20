@@ -10,8 +10,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TAG = "MainActivity";
     private TextView mTextView;
 
+    @TimeRecord
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+//        TimeUtil.getInstance().recordEnter("xxx");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mTextView = (TextView) findViewById(R.id.testbtn);
@@ -26,15 +28,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         findViewById(R.id.textView).setOnClickListener(this);
         findViewById(R.id.textView2).setOnClickListener(this);
+
+//        TimeUtil.getInstance().recordExit("xxx");
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
     }
-
+    @TimeRecord
     @Override
     public void onClick(View v) {
+//        TimeUtil.getInstance().recordEnter("xxx");
         switch (v.getId()) {
             case R.id.textView:
                 Log.e(TAG, "textView onclick");
@@ -45,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             default:
                 break;
         }
+//        TimeUtil.getInstance().recordEnter("xxx");
+
     }
 
 }
