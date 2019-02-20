@@ -31,14 +31,18 @@ public class CustomVisitor extends ClassVisitor {
             protected void onMethodEnter() {
 //                System.out.println(name+" "+desc);
                 if ("onClick".equals(name)) {
+
+                    mv.visitMethodInsn(INVOKESTATIC, "com/example/lishoulin/amsapplication/DebouncedClick", "getInstance",
+                            "()Lcom/example/lishoulin/amsapplication/DebouncedClick;", false);
                     mv.visitVarInsn(ALOAD, 1);
-                    mv.visitMethodInsn(INVOKESTATIC,
-                            "com/example/lishoulin/amsapplication/DebouncedClick",
-                            "isCanClick", "(Landroid/view/View;)Z", false);
+                    mv.visitMethodInsn(INVOKEVIRTUAL, "com/example/lishoulin/amsapplication/DebouncedClick", "isCanClick",
+                            "(Landroid/view/View;)Z", false);
                     Label label = new Label();
                     mv.visitJumpInsn(IFNE, label);
                     mv.visitInsn(RETURN);
                     mv.visitLabel(label);
+
+
                 } else if ("onCreate".equals(name)) {
                     mv.visitVarInsn(ALOAD, 0);
                     mv.visitMethodInsn(INVOKESTATIC,
