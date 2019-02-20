@@ -6,7 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "MainActivity";
     private TextView mTextView;
 
@@ -23,6 +23,9 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        findViewById(R.id.textView).setOnClickListener(this);
+        findViewById(R.id.textView2).setOnClickListener(this);
     }
 
     @Override
@@ -30,7 +33,18 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-//    @Override
-//    public void onClick(View v) {
-//    }
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.textView:
+                Log.e(TAG, "textView onclick");
+                break;
+            case R.id.textView2:
+                Log.e(TAG, "textView2 onclick");
+                break;
+            default:
+                break;
+        }
+    }
+
 }

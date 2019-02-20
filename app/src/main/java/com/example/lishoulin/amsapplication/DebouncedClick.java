@@ -14,26 +14,26 @@ public class DebouncedClick {
     private static long WAIT_TIME = 300L;
 
 
-    private static final Map<View, DebouncedView> viewWaitTimeMap = new HashMap<>();
+    private static final Map<Integer, DebouncedView> viewWaitTimeMap = new HashMap<>();
 
 
     public static boolean isCanClick(View tagview) {
-        DebouncedView debouncedView = viewWaitTimeMap.get(tagview);
+        DebouncedView debouncedView = viewWaitTimeMap.get(tagview.getId());
         if (debouncedView == null) {
             long starttime = System.currentTimeMillis();
             debouncedView = new DebouncedView(tagview);
             debouncedView.setTime(starttime);
-            viewWaitTimeMap.put(tagview, debouncedView);
-            Log.e(TAG,"点击通行1");
+            viewWaitTimeMap.put(tagview.getId(), debouncedView);
+            Log.e(TAG, "点击通行1");
             return true;
         }
         long currenttime = System.currentTimeMillis();
         if (currenttime - debouncedView.getTime() >= WAIT_TIME) {
             debouncedView.setTime(currenttime);
-            Log.e(TAG,"点击通行2");
+            Log.e(TAG, "点击通行2");
             return true;
         }
-        Log.e(TAG,"点击拦截");
+        Log.e(TAG, "点击拦截");
         return false;
     }
 
