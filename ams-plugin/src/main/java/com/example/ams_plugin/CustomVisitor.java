@@ -32,9 +32,7 @@ public class CustomVisitor extends ClassVisitor {
         methodVisitor = new AdviceAdapter(Opcodes.ASM5, methodVisitor, access, name, desc) {
             @Override
             protected void onMethodEnter() {
-//                System.out.println("onMethodEnter:" + name + " " + desc);
-
-
+//                System.out.println("onMethodEnter:" + desc );
 
 
                 if ("onClick".equals(name)) {
@@ -69,7 +67,7 @@ public class CustomVisitor extends ClassVisitor {
                 if (isTimeRecord) {
                     mv.visitMethodInsn(INVOKESTATIC, "com/example/lishoulin/amsapplication/TimeUtil", "getInstance",
                             "()Lcom/example/lishoulin/amsapplication/TimeUtil;", false);
-                    mv.visitLdcInsn(name);
+                    mv.visitLdcInsn(name + desc);
                     mv.visitMethodInsn(INVOKEVIRTUAL, "com/example/lishoulin/amsapplication/TimeUtil", "recordEnter",
                             "(Ljava/lang/String;)V", false);
                 }
@@ -84,7 +82,7 @@ public class CustomVisitor extends ClassVisitor {
                 if (isTimeRecord) {
                     mv.visitMethodInsn(INVOKESTATIC, "com/example/lishoulin/amsapplication/TimeUtil", "getInstance",
                             "()Lcom/example/lishoulin/amsapplication/TimeUtil;", false);
-                    mv.visitLdcInsn(name);
+                    mv.visitLdcInsn(name + desc);
                     mv.visitMethodInsn(INVOKEVIRTUAL, "com/example/lishoulin/amsapplication/TimeUtil", "recordExit",
                             "(Ljava/lang/String;)V", false);
                     isTimeRecord = false;

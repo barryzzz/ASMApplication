@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class TimeUtil {
 
-    private Map<String, Record> mRecordMap = new HashMap<>();
+    private Map<Integer, Record> mRecordMap = new HashMap<>();
 
 
     private TimeUtil() {
@@ -28,11 +28,11 @@ public class TimeUtil {
     }
 
     public void recordEnter(String name) {
-        Record record = mRecordMap.get(name);
+        Record record = mRecordMap.get(name.hashCode());
         if (record == null) {
             record = new Record();
             record.setStartTime(System.currentTimeMillis());
-            mRecordMap.put(name, record);
+            mRecordMap.put(name.hashCode(), record);
         } else {
             record.setStartTime(System.currentTimeMillis());
             record.setEndTime(0);
@@ -40,10 +40,10 @@ public class TimeUtil {
     }
 
     public void recordExit(String name) {
-        Record record = mRecordMap.get(name);
+        Record record = mRecordMap.get(name.hashCode());
         if (record != null) {
             record.setEndTime(System.currentTimeMillis());
-            mRecordMap.put(name, record);
+            mRecordMap.put(name.hashCode(), record);
             Log.e("record-->", "name:" + name + " time:" + (record.getEndTime() - record.getStartTime()));
         }
 
